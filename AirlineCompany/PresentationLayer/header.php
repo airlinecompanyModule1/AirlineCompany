@@ -1,7 +1,7 @@
 
 <?php
-require_once("PresentationLayer/contains.php");
-echo "sibel";
+include_once("contains.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,13 +17,14 @@ echo "sibel";
       <a class="navbar-brand" href="#">P'airlines</a>
     </div>
     <ul class="nav nav-pills " >
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Flight Planning</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Check-in</b></font></a></li>
+      <li><a href="#"><font color="rgb(0,206,209)" > <b>Flight Planning</b></font></a></li>
+      <li><a href="PresentationLayer/checkin.php"><font color="rgb(204,102,0)" > <b>Check-in</b></font></a></li>
       <li><a href="#"><font color="rgb(204,102,0)" > <b>Cancellation</b></font></a></li>
       
       <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+     
+      <li><a href="PresentationLayer/registration.php"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="PresentationLayer/Login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       </ul>
 
     </ul>
