@@ -24,9 +24,7 @@ include_once("contains.php");
       <li><a href="#"><font color="rgb(204,102,0)" > <b>Help</b></font></a></li>
 
       <ul class="nav navbar-nav navbar-right">
-    
-      <li><a href="#">Profile</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      <li><a href="../index.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
 
     </ul>

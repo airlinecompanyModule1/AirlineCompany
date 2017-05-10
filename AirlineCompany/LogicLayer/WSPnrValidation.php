@@ -13,9 +13,6 @@
 				$FlightId = $row['FlightId'];
 				
 			}
-			
-		
-	
 			header('Content-type: application/json');
 			$arr = array("FlightId" =>$FlightId);
 		    echo json_encode($arr);

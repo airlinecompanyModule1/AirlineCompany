@@ -6,7 +6,7 @@ $id="";
 $errorMeesage="";
 if(isset($_REQUEST['ID']))
 {
-   $id=$_GET['ID'];
+   $id=$_REQUEST['ID'];
    $result=MemberManager::getMemberById($id);
    if($result->getID()!=NULL)
    {
@@ -19,11 +19,11 @@ if(isset($_REQUEST['ID']))
        $isAdmin=$result->getIsAdmin();
    }
    #$_GET['ID']="";
-   echo $id;
+   #echo $id;
 }
 if(isset($_POST['memberName']) && isset($_POST['memberSurname'])&& isset($_POST['flightMoney'])&& isset($_POST['email']) && isset($_POST['phoneNo']))
 {
-	echo "girdi";
+	 #echo "girdi";
     $name=$_POST['memberName'];
     $surname=$_POST['memberSurname'];
     $flightmoney=$_POST['flightMoney'];

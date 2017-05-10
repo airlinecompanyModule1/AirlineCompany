@@ -47,6 +47,13 @@ if(isset($_POST["flag"]))
 <div class="container">
     <div class="row col-md-6 col-md-offset-1 custyle">
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform">
+    <div class="row">
+	
+			<div class="col-xs-6 col-sm-6 col-md-6">
+            <input type="button" class="btn btn-danger btn-xs" name="bttninsert" id="bttninsert"  value="New Member" onclick="insertFunction()" >
+           
+           </div>
+    </div>
     <table class="table table-striped custab" id="tbl">
     <thead>
     
@@ -117,6 +124,10 @@ function deleteFunction(row)
     document.getElementById('flag').value=new_row;
      
     document.getElementById('myform').submit();
+}
+function insertFunction()
+{
+	window.location.href="adminMemberInsert.php";
 }
 </script>
 </body>

@@ -23,6 +23,21 @@
 				
 				return $success;
    	      }
+   	        public static function updateMemberByIdMember($member)
+   	      {
+   	      	
+    			$db = new DB();
+
+    			$id=$member->getID();
+    			$name=$member->getName();
+  	   			$surname=$member->getSurname();
+   	   			$phone=$member->getPhoneNumber();
+       			$email=$member->getEmail();
+				$success = $db->executeQuery("UPDATE members SET Namee='$name',Surname='$surname',Email='$email',PhoneNo='$phone' where ID='$id'");
+				
+				
+				return $success;
+   	      }
    	      public static function deleteMemberById($id)
    	      {
       			$db=new DB();
@@ -34,7 +49,7 @@
           {
           	
 				$db = new DB();
-				$result = $db->getDataTable("select ID, IsAdmin,Namee,Surname,Email,PhoneNo,Passwordd,FlightMoney,Gender from members");
+				$result = $db->getDataTable("select ID, IsAdmin,Namee,Surname,Email,PhoneNo,Passwordd,FlightMoney,Gender from members order by ID");
 			
 				$allMembers = array();
 			

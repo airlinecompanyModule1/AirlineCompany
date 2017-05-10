@@ -1,10 +1,10 @@
 <?php
- require_once("PresentationLayer/contains.php");
+ require_once("contains.php");
  
 ?>
 <!DOCTYPE html>
 <head>
-    <style type="text/css">
+	<style type="text/css">
 .kolon
  { 
     float:left; padding:0px; 
@@ -17,57 +17,57 @@
 </head>
 <html lang="en">
 <body role="document">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 column">
-                <form method="POST" action="<?php $_PHP_SELF ?>">
-                    <div class="radio-inline">
-                      <label>
-                        <input type="radio" name="travel_type" value="oneway" checked>One way
-                      </label>
-                    </div>
-                    <div class="radio-inline">
-                        <label>
-                        <input type="radio" name="travel_type" value="roundtrip">Round trip
-                      </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="from"><span class="glyphicon glyphicon-plane"></span>From</label>
-                        <select class="form-control" id="from">
-                            
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 column">
+				<form method="POST" action="<?php $_PHP_SELF ?>">
+					<div class="radio-inline">
+					  <label>
+					    <input type="radio" name="travel_type" value="oneway" checked>One way
+					  </label>
+					</div>
+					<div class="radio-inline">
+						<label>
+					  	<input type="radio" name="travel_type" value="roundtrip">Round trip
+					  </label>
+					</div>
+					<div class="form-group">
+						<label for="from"><span class="glyphicon glyphicon-plane"></span>From</label>
+						<select class="form-control" id="from">
+							
+							<option value="AM">Izmir Adnan Menderes Airport</option>
+							<option value="IST">Istanbul Ataturk Airport</option>
+							<option value="SAW">Istanbul Sabiha Gokcen Airport</option>
+							<option value="ESB">Ankara Esenboga Airport</option>
+						
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="to"><span class="glyphicon glyphicon-plane"></span>To</label>
+						<select class="form-control" id="to">
                             <option value="AM">Izmir Adnan Menderes Airport</option>
                             <option value="IST">Istanbul Ataturk Airport</option>
                             <option value="SAW">Istanbul Sabiha Gokcen Airport</option>
                             <option value="ESB">Ankara Esenboga Airport</option>
-                        
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="to"><span class="glyphicon glyphicon-plane"></span>To</label>
-                        <select class="form-control" id="to">
-                            <option value="AM">Izmir Adnan Menderes Airport</option>
-                            <option value="IST">Istanbul Ataturk Airport</option>
-                            <option value="SAW">Istanbul Sabiha Gokcen Airport</option>
-                            <option value="ESB">Ankara Esenboga Airport</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
+						</select>
+					</div>
+					
+					<div class="form-group">
                         <label><span class="glyphicon glyphicon-calendar"></span> Departure Date
                         <input type="date" name="ddate" id="ddate"  class="form-control input-sm" placeholder="Departure Date">
                        
                         </label>
-                    </div>
+					</div>
 
-                    <div class="form-group">
+					<div class="form-group">
                         <label><span class="glyphicon glyphicon-calendar"></span> Return Date
                         <input type="date" name="rdate" id="rdate" class="form-control input-sm" placeholder="Return Date">
                         </label>
-                    </div>
-                    
-                    
+					</div>
+					
+					
                     <div class="kolon">
-                        <div style="width: 60px;">
+                    	<div style="width: 60px;">
                          <div class="form-group">
                          <label for="selAdult">Adult</label>
                          <select class="form-control" id="selAdult" >
@@ -78,12 +78,12 @@
                          <option>4</option>
                          <option>5</option>
                          </select>
-                         </div> 
+                         </div>	
                         </div>
                     </div>                  
                    
                     <div class="kolon">
-                        <div style="width: 60px;">
+                    	<div style="width: 60px;">
                          <div class="form-group">
                          <label for="selChild">Child</label>
                          <select class="form-control" id="selChild" >
@@ -94,7 +94,7 @@
                          <option>4</option>
                          <option>5</option>
                          </select>
-                         </div> 
+                         </div>	
                         </div>
                     </div>
                     <div class="kolon">
@@ -109,20 +109,20 @@
                          <option>4</option>
                          <option>5</option>
                          </select>
-                         </div> 
-                        </div>                      
+                         </div>	
+                        </div>                    	
                     </div>
                     <div style="margin-left: 270px; margin-top: 100px;">
-                    <button type="button" id="search-flights" class="btn btn-danger" > <span class="glyphicon glyphicon-search"></span>Search</button>
-                    </div>
-                </form>
-            </div>
-            
-        </div>
-    </div>
+					<button type="button" id="search-flights" class="btn btn-danger" > <span class="glyphicon glyphicon-search"></span>Search</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
 
 <script type="text/javascript">
-    FlightSearch.init();
+	FlightSearch.init();
 </script>
 
 </body>

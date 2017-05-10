@@ -12,20 +12,23 @@ $errorMeesage = "";
 
         	#$flag=ControlManager::controlRegistration($name,$surname,$phone);
         	
-        		$result = MemberManager::controlLogin($phone,$password);
-				if($result->getID()!=NULL)
+        		$member = MemberManager::controlLogin($phone,$password);
+				if($member->getID()!=NULL)
 				{
-					if($result->getIsAdmin()=="N")
+					session_start();
+			        $_SESSION['loginMember'] =$member->getID();
+                  
+					if($member->getIsAdmin()=="N")
 					{
-						header("Location:../index.php");
+
+						header("Location:memberHome.php");
 					}
 					else
 					{
 						header("Location:adminHeader.php");
 					}
                    	#$errorMeesage="OLDU";
-                   	session_start();
-					$_SESSION['activeUser'] = $result->getID();
+
 				}
        			 else
         		{
