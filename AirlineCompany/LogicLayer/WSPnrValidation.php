@@ -1,10 +1,10 @@
 <?php
    require_once("../DataLayer/DB.php");
-	if(isset($_POST['PNR'])) 
+	if(isset($_GET['PNR'])) 
 	{
 		
 			$db = new DB();
-			$pnr=$_POST['PNR'];
+			$pnr=$_GET['PNR'];
 			$sql = "SELECT  FlightId FROM tickets WHERE PNR='".$pnr."'";
 			$result = $db->getDataTable($sql);
 			$FlightId=-1;
@@ -15,10 +15,8 @@
 			}
 			header('Content-type: application/json');
 			$arr = array("FlightId" =>$FlightId);
-		    echo json_encode($arr);
+		   echo json_encode($arr);
 		
-
-		
-
 	}
+
 ?>		

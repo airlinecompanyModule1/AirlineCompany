@@ -1,0 +1,106 @@
+{
+  "type":"round trip",
+
+  "TicketGoing":[
+  {
+    "id": "1",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "14:10",
+    "price": "54"
+  },
+  {
+    "id": "2",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "15:10",
+    "price": "90"  },
+  {
+    "id": "3",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "18:10",
+    "price": "60"
+  },
+  {
+    "id": "4",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "08:00",
+    "price": "65"
+  },
+  {
+    "id": "5",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "10:10",
+    "price": "80"
+  },
+  {
+    "id": "6",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "12:10",
+    "price": "150"
+  },
+  {
+    "id": "7",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "21:10",
+    "price": "54"
+  }
+],
+  
+
+   "TicketsReturn":[
+  {
+    "id": "1",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "14:10",
+    "price": "54"
+  },
+  {
+    "id": "2",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "15:10",
+    "price": "90"  },
+  {
+    "id": "3",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "18:10",
+    "price": "60"
+  },
+  {
+    "id": "4",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "08:00",
+    "price": "65"
+  },
+  {
+    "id": "5",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "10:10",
+    "price": "80"
+  },
+  {
+    "id": "6",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "12:10",
+    "price": "150"
+  },
+  {
+    "id": "7",
+    "from": "izmir",
+    "to": "ankara",
+    "time": "21:10",
+    "price": "54"
+  }
+]
+}

@@ -17,18 +17,23 @@
 </head>
 <html lang="en">
 <body role="document">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-4 column">
+	<div class="container" style="background-image:url('plane.png');background-repeat:no-repeat;   background-attachment: fixed;
+    background-position: center; ">
+		<div class="row" style="border: 2px solid gray;
+     padding-top: 40px;
+    padding-right: 20px;
+    padding-bottom: 40px;
+    padding-left: 40px;" >
+			<div class="col-md-4 column" >
 				<form method="POST" action="<?php $_PHP_SELF ?>">
 					<div class="radio-inline">
 					  <label>
-					    <input type="radio" name="travel_type" value="oneway" checked>One way
+					    <input type="radio" name="travel_type" value="oneway" checked  onclick="oneFunction()">One way
 					  </label>
 					</div>
 					<div class="radio-inline">
 						<label>
-					  	<input type="radio" name="travel_type" value="roundtrip">Round trip
+					  	<input type="radio" name="travel_type" value="roundtrip" onclick="roundFunction()">Round trip
 					  </label>
 					</div>
 					<div class="form-group">
@@ -59,9 +64,9 @@
                         </label>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group" id="rdiv" >
                         <label><span class="glyphicon glyphicon-calendar"></span> Return Date
-                        <input type="date" name="rdate" id="rdate" class="form-control input-sm" placeholder="Return Date">
+                        <input type="date" name="rdate" id="rdate" class="form-control input-sm" placeholder="Return Date" disabled="true">
                         </label>
 					</div>
 					
@@ -113,16 +118,55 @@
                         </div>                    	
                     </div>
                     <div style="margin-left: 270px; margin-top: 100px;">
-					<button type="button" id="search-flights" class="btn btn-danger" > <span class="glyphicon glyphicon-search"></span>Search</button>
+					<button type="button" id="search-flights" class="btn btn-danger" onclick="searchFunction();"> <span class="glyphicon glyphicon-search"></span>Search</button>
 					</div>
 				</form>
 			</div>
 			
 		</div>
+      
 	</div>
 
 <script type="text/javascript">
-	FlightSearch.init();
+	function searchFunction()
+    {
+        var adult = document.getElementById("selAdult");
+        var countAdult = adult.options[adult.selectedIndex].value;
+
+        var child=document.getElementById("selChild");
+        var countChild = child.options[child.selectedIndex].value;
+
+        var infant=document.getElementById("selInfant");
+        var countInfant=infant.options[infant.selectedIndex].value;
+        
+        var total=parseInt(countAdult,10)+parseInt(countChild,10);
+        var dDate=document.getElementById("ddate").value;
+        var rDate=document.getElementById("rdate").value;
+        if(total>5 )
+        {
+            alert("Count of total passengers must be lower than 5 or equal !!!"+total);
+        }
+        else if(parseInt(countInfant,10)>parseInt(countAdult,10))
+        {
+            alert("Count of Infant passenger must be lower than count of Adult passenger or equal !!!");
+        }
+        else if(dDate>rdate)
+        {
+            alert("tarih control");
+        }
+      
+    }
+
+    function oneFunction()
+    {
+         var flag = document.getElementById("rdate");
+         flag.disabled = true;
+    }
+    function roundFunction()
+    {
+         var flag = document.getElementById("rdate");
+         flag.disabled = false;;
+    }
 </script>
 
 </body>

@@ -78,6 +78,7 @@
 		public static function insertNewMember($name,$surname,$email,$phone,$gender,$password) 
 		{
 				$db = new DB();
+				#$mdpassword=md5($password);
 				$success = $db->executeQuery("INSERT INTO members(ID, IsAdmin, Namee,Surname,Email,PhoneNo,Passwordd,FlightMoney,Gender)VALUES (NULL,'N', '$name','$surname','$email','$phone','$password',0,'$gender')");
 				#$success=$db->executeQuery("INSERT into deneme(number,no)VALUES('5',541)");
 				
@@ -86,6 +87,7 @@
         public static function controlLogin($phone,$password)
         {
  				$db=new DB();
+ 				#$mdpassword=md5($password);
  				$query="select ID ,IsAdmin from members where PhoneNo='$phone' and Passwordd='$password'";
  				$result = $db->getDataTable("select ID ,IsAdmin from members where PhoneNo='$phone' and Passwordd='$password'");
 			
