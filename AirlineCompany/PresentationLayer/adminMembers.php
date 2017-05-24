@@ -3,18 +3,6 @@ require_once("contains.php");
 require_once("../LogicLayer/MemberManager.php");
 require_once("adminHeader.php");
 $errormessage="";
-#if(isset($_REQUEST['Del']))
-#{
-
-	#$control=$_REQUEST["Del"];
-	#$control=0;
-	#if($control="0")
-	#{
-     #  $errormessage="Delete operation is not successfull";
-	#}
-	#echo $errormessage;
-	#$_REQUEST["Del"]="";
-#}
 if(isset($_POST["flag"]))
 {
 	$id=$_POST["flag"];
@@ -25,7 +13,6 @@ if(isset($_POST["flag"]))
          $errormessage="Delete operation is not successfull!!!";
          #echo $id;
     }
-
 }
 ?>
 <!DOCTYPE html>
@@ -42,9 +29,12 @@ if(isset($_POST["flag"]))
     box-shadow: 3px 3px 0px transparent;
     transition: 0.5s;
     }
+   
+}
 </style>
 <body>
 <div class="container">
+<h2 style="text-align: center">Members List</h2>
     <div class="row col-md-6 col-md-offset-1 custyle">
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform">
     <div class="row">
@@ -105,6 +95,13 @@ if(isset($_POST["flag"]))
     </div>
 </div>
 <script type="text/javascript">
+var tbl=document.getElementById('tbl');
+for (var i = 1; i < tbl.rows.length; i++) 
+{
+                tbl.rows[i].style.cursor = "pointer";
+                tbl.rows[i].onmousemove = function () { this.style.backgroundColor = "#008B8B"; this.style.color = "#FFFFFF"; };
+                tbl.rows[i].onmouseout = function () { this.style.backgroundColor = ""; this.style.color = ""; };
+}
 function updateFunction(row)
 {
     var i=row.parentNode.parentNode.rowIndex;
@@ -120,10 +117,16 @@ function deleteFunction(row)
     var x=document.getElementById('tbl');
        // deep clone the targeted row
     var new_row = x.rows[i].cells[0].innerHTML;
-        
+        //x.rows[i].style.backgroundColor = "#365890";
     document.getElementById('flag').value=new_row;
-     
-    document.getElementById('myform').submit();
+ 
+    var r = confirm("The selected member will be permanently deleted !!!");
+    if (r == true) 
+    {
+         document.getElementById('myform').submit();
+    } 
+   
+   
 }
 function insertFunction()
 {

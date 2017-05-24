@@ -1,26 +1,102 @@
 <?php
+
 require_once("contains.php");
 require_once("header.php");
 require_once("../LogicLayer/TicketInformation.php");
-$json_string = 'tickets.json';
+/*$json_string = 'tickets.json';
 $errormessage="";
 
 
 //result post ile gelecek search ekranından sonra burada decode edilip gerisi aynı
 
 $jsondata = file_get_contents($json_string);
-$obj = json_decode($jsondata,true);
+$obj = json_decode($jsondata,true);*/
+
 #print_r($obj);
 #echo "content:".$obj["Tickets"][0]["id"];
 #echo "count".count($obj["Tickets2"]);
 #echo "type:".$obj["type"];
-$flightType=$obj["type"];
+
 #echo "elma";
+ 
+$obj="";
+$flightType="";
+if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GET["ddate"])&&isset($_GET["selAdult"])&& isset($_GET["selChild"])&& isset($_GET["selInfant"])&& isset($_GET["rdate"]))
+{
+
+     // prepare GET query
+       $headers = array(
+        "Content-Type: application/json"
+        );
+        // can be tested by web browser, http://md5.jsontest.com/?text=hello%20world
+       $fields = array(
+        "type" => $_GET["type"],
+        "from" => $_GET["from"],
+        "to" => $_GET["to"],
+        "ddate" => $_GET["ddate"],
+        "rdate" => $_GET["rdate"],
+        "selAdult" => $_GET["selAdult"],
+        "selChild" => $_GET["selChild"],
+        "selInfant" => $_GET["selInfant"]
+
+        );
+       
+        $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSTicket.php/?" . http_build_query($fields);
+         //$con='http://localhost:8080/AirlineCompany/LogicLayer/WSPnrValidation.php/?PNR='.$original_text;
+        // $jsondata=file_get_contents($url);
+        // initialize a cURL session
+        $ch = curl_init();
+        
+        // set the url, number of GET vars, GET data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // TRUE to return the transfer as a string of the return value of curl_exec() 
+        // instead of outputting it out directly
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+        // FALSE to stop cURL from verifying the peer's certificate.
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
+        // execute request
+        $result = curl_exec($ch);
+        $obj = json_decode($result, true);
+       
+        curl_close($ch);
+        $flightType=$obj["type"];
+    
+         echo "type:".$flightType;
+         
+}
+
+else if(isset($_GET["goID"] ))
+{
+        session_start();
+        $_SESSION['flightType'] =$flightType;
+        $_SESSION["goID"]=$_GET["goID"];
+        $_SESSION["goFrom"]=$_GET["goFrom"];
+        $_SESSION["goTo"]=$_GET["goTo"];
+        $_SESSION["goTime"]=$_GET["goTime"];
+        $_SESSION["goPrice"]=$_GET["goPrice"];
+        $_SESSION["goDate"]=$_GET["goDate"];
+    if($flightType=="round trip")
+
+    {
+         $_SESSION["returnID"]=$_GET["returnID"];
+         $_SESSION["returnFrom"]=$_GET["returnFrom"];
+         $_SESSION["returnTo"]=$_GET["returnTo"];
+         $_SESSION["returnTime"]=$_GET["returnTime"];
+         $_SESSION["returnPrice"]=$_GET["returnPrice"];
+         $_SESSION["returnDate"]=$_GET["returnDate"];
+    }
+   header("Location:passengerInfo.php/");
+    
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <style type="text/css">
-	.custab{
+    .custab{
     border: 1px solid #ccc;
     padding: 5px;
     margin: 5% 0;
@@ -40,139 +116,181 @@ $flightType=$obj["type"];
     <thead>
     
         <tr>
-			<th>ID</th>
-			<th>From</th>
-			<th>To</th>
-			<th>Time</th>
-			<th>Price</th>	
+            <th>ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Price</th>  
             <th>Select</th>
         </tr>
     </thead>
-            <?php			
-				for($i = 0; $i < count($obj["TicketGoing"]); $i++) {
-			 ?>
-				<tr>
-					<td><?php echo $obj["TicketGoing"][$i]["id"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["from"]?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["to"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["time"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["price"] ?></td>
-					<td> <input type="radio" name="goingradio" onclick="selectGoingFunction(this)"> 
-					</td>
-				</tr>
-				<?php
-				}
-			?>
+            <?php           
+                for($i = 0; $i < count($obj[0]["TicketGoing"]); $i++) {
+             ?>
+                <tr>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["id"] ?></td>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["from"]?></td>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["to"] ?></td>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["date"] ?></td>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["time"] ?></td>
+                    <td><?php echo $obj[0]["TicketGoing"][$i]["price"] ?></td>
+                    <td> <input type="radio" name="goingradio" onclick="selectGoingFunction(this)"> 
+                    </td>
+                </tr>
+                <?php
+                }
+            ?>
     </table>
-  	<?php 
-		if(isset($errormessage)) 
-		{
-			echo "<br>" . "<span style='color: red;'>" . $errormessage . "</span>";
-		}
+    <?php 
+        if(isset($errormessage)) 
+        {
+            echo "<br>" . "<span style='color: red;'>" . $errormessage . "</span>";
+        }
 
-	?>
-	<input id="flagGoing" type="text" name="flagGoing" style="display: none">
+    ?>
+    <input id="flagGoing" type="text" name="flagGoing" style="display: none">
     </form>
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform2" style="display: none">
     <table class="table table-striped custab" id="tblReturn">
     <thead>
     
         <tr>
-			<th>ID</th>
-			<th>From</th>
-			<th>To</th>
-			<th>Time</th>
-			<th>Price</th>	
+            <th>ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Price</th>  
             <th>Select</th>
         </tr>
     </thead>
-            <?php			
-				for($i = 0; $i < count($obj["TicketGoing"]); $i++) {
-			 ?>
-				<tr>
-					<td><?php echo $obj["TicketGoing"][$i]["id"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["from"]?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["to"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["time"] ?></td>
-					<td><?php echo $obj["TicketGoing"][$i]["price"] ?></td>
-					<td><input type="radio" name="returnradio" onclick="selectReturnFunction(this)"></td>
-				</tr>
-				<?php
-				}
-			?>
+            <?php           
+                for($i = 0; $i < count($obj[1]["TicketReturn"]); $i++) {
+             ?>
+                <tr>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["id"] ?></td>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["from"]?></td>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["to"] ?></td>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["date"] ?></td>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["time"] ?></td>
+                    <td><?php echo $obj[1]["TicketReturn"][$i]["price"] ?></td>
+                    <td><input type="radio" name="returnradio" onclick="selectReturnFunction(this)"></td>
+                </tr>
+                <?php
+                }
+            ?>
     </table>
-  	<?php 
-		if(isset($errormessage)) 
-		{
-			echo "<br>" . "<span style='color: red;'>" . $errormessage . "</span>";
-		}
+    <?php 
+        if(isset($errormessage)) 
+        {
+            echo "<br>" . "<span style='color: red;'>" . $errormessage . "</span>";
+        }
 
-	?>
+    ?>
     </form>
     <div style="margin-left: 480px; margin-bottom: 100px">
-    <button type="button" id="search-flights" class="btn btn-danger" > Select</button>
+    <button type="button" id="search-flights" class="btn btn-danger" onclick="bttnSelectFunction()"> Select</button>
     </div>
     </div>
   
-		
-		
+        
+        
 </div>
 
 <script type="text/javascript">
-	
+    
 
     var goingId;
     var goingFrom;
     var goingTo;
     var goingTime;
     var goingPrice;
+    var goingDate;
 
     var returnId;
     var returnFrom;
     var returnTo;
     var returnTime;
     var returnPrice;
- 
-	function selectGoingFunction(row)
-	{
+    var returnDate;
+    var type= '<?php echo $flightType ?>';
+    var i=0;
+    var iReturn=0;
+    function selectGoingFunction(row)
+    {
          /*document.getElementById('flagGoing').style.display="block";*/
-		 var i=row.parentNode.parentNode.rowIndex;
+         i=row.parentNode.parentNode.rowIndex;
+         b=row.parentNode.parentNode.rowIndex;
          var x=document.getElementById('tblGoing');
          // deep clone the targeted row
          goingId = x.rows[i].cells[0].innerHTML;
          goingFrom=x.rows[i].cells[1].innerHTML;
          goingTo=x.rows[i].cells[2].innerHTML;
-         goingTime=x.rows[i].cells[3].innerHTML;
-         goingPrice=x.rows[i].cells[4].innerHTML;
-         var type= '<?php echo $flightType ?>';
+         goingDate=x.rows[i].cells[3].innerHTML;
+         goingTime=x.rows[i].cells[4].innerHTML;
+         goingPrice=x.rows[i].cells[5].innerHTML;
+        
          if(type=="round trip")
          {
 
-         	document.getElementById('myform2').style.display="block";
-          /*window.location.href="passergerInfo.php?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice;*/
+            document.getElementById('myform2').style.display="block";
+      
          }
          document.getElementById('flagGoing').value=goingId;
          document.getElementById('flagGoing').style.display="block";
         
-	}
+    }
      function selectReturnFunction(row)
-	{
-		 var i=row.parentNode.parentNode.rowIndex;
+    {
+         iReturn=row.parentNode.parentNode.rowIndex;
+         c=row.parentNode.parentNode.rowIndex;
          var x=document.getElementById('tblReturn');
          // deep clone the targeted row
-         returnId = x.rows[i].cells[0].innerHTML;
-         returnFrom=x.rows[i].cells[1].innerHTML;
-         returnTo=x.rows[i].cells[2].innerHTML;
-         returnTime=x.rows[i].cells[3].innerHTML;
-         returnPrice=x.rows[i].cells[4].innerHTML;
-         var type= '<?php echo $flightType ?>';
+         returnId = x.rows[iReturn].cells[0].innerHTML;
+         returnFrom=x.rows[iReturn].cells[1].innerHTML;
+         returnTo=x.rows[iReturn].cells[2].innerHTML;
+         returnDate=x.rows[iReturn].cells[3].innerHTML;
+         returnTime=x.rows[iReturn].cells[4].innerHTML;
+         returnPrice=x.rows[iReturn].cells[5].innerHTML;
+       
 
         
-       window.location.href="passergerInfo.php.php?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice+"returnID= + "+returnId+"returnFrom=+"+returnFrom+"returnTo=+"+returnTo+"returnTime=+"+returnTime+"returnPrice=+"+returnPrice;
+       /*window.location.href="passergerInfo.php.php?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice+"returnID= + "+returnId+"returnFrom=+"+returnFrom+"returnTo=+"+returnTo+"returnTime=+"+returnTime+"returnPrice=+"+returnPrice;*/
          
 
         
-	}
+    }
+    function bttnSelectFunction()
+    {
+               if(type=="one way")
+                {
+                    if(i!=0)
+                    {
+                         window.location.href="http://localhost:8080/AirlineCompany/PresentationLayer/passergerInfo.php/?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice+"goDate=+"+goDate;                        
+                    }
+                    else
+                    {
+                        alert("Please choose ticket !!!");
+                    }
+
+                }
+                else if(type=="round trip")
+                {
+
+                    if(i!=0 && iReturn!=0)
+                    {
+                        //window.location.href="adminMemberUpdate.php?ID= + "+goingId+"&Elma= +"+goingId;
+                        window.location.href="passengerInfo.php?goID= + "+goingId+"&goFrom=+ "+goingFrom+"&goTo=+ "+goingTo+"&goTime=+ "+goingTime+"&goPrice=+ "+goPrice+"&returnID= + "+returnId+"&returnFrom=+ "+returnFrom+"&returnTo=+ "+returnTo+"&returnTime=+"+returnTime+"&returnPrice=+ "+returnPrice+"&returnDate=+ "+returnDate;
+                    }
+                    else
+                    {
+                        alert("Please choose ticket !!!");
+                    }
+                }
+           
+
+    }
 
 </script>
 </body>

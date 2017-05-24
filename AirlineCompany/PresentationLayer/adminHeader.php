@@ -17,10 +17,10 @@ include_once("contains.php");
       <a class="navbar-brand" href="#">P'airlines</a>
     </div>
     <ul class="nav nav-pills " >
-      <li><a href="adminMembers.php"><font color="rgb(0,206,209)" > <b>Members</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Tickets</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Passengers</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Connections</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminMembers.php"><font color="rgb(0,206,209)" > <b>Members</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminTickets.php"><font color="rgb(204,102,0)" > <b>Tickets</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminPassengers.php""><font color="rgb(204,102,0)" > <b>Passengers</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminConnections.php"><font color="rgb(204,102,0)" > <b>Connections</b></font></a></li>
       <li><a href="#"><font color="rgb(204,102,0)" > <b>Help</b></font></a></li>
 
       <ul class="nav navbar-nav navbar-right">
