@@ -21,7 +21,7 @@
 			
 		
 			header('Content-type: application/json');
-			$type="round trip";
+			$type=$_GET["type"];
 
 		   echo json_encode(array("type"=>$type,array("TicketGoing" =>$tickets),array("TicketReturn" =>$tickets2)));
 		

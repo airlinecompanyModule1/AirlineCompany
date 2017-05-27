@@ -5,10 +5,7 @@ include_once("contains.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
-
-</head>
 
 <body role="document">
 <nav class="navbar navbar-inverse" style="background-color:rgb(0,102,102); border-color:rgb(0,102,102);">

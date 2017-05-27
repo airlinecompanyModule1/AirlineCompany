@@ -21,6 +21,7 @@ $obj = json_decode($jsondata,true);*/
  
 $obj="";
 $flightType="";
+$totalPassenger=0;
 if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GET["ddate"])&&isset($_GET["selAdult"])&& isset($_GET["selChild"])&& isset($_GET["selInfant"])&& isset($_GET["rdate"]))
 {
 
@@ -40,7 +41,13 @@ if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GE
         "selInfant" => $_GET["selInfant"]
 
         );
-       
+       session_start();
+       $_SESSION['selAdult'] =$_GET["selAdult"];
+       $_SESSION['selChild'] =$_GET["selChild"];
+       $_SESSION['selInfant'] =$_GET["selInfant"];
+       $totalPassenger=$_GET["selAdult"]+$_GET["selChild"]+$_GET["selInfant"];
+       //echo $totalPassenger;
+       $_SESSION["totalPassenger"]= $totalPassenger;
         $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSTicket.php/?" . http_build_query($fields);
          //$con='http://localhost:8080/AirlineCompany/LogicLayer/WSPnrValidation.php/?PNR='.$original_text;
         // $jsondata=file_get_contents($url);
@@ -63,32 +70,45 @@ if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GE
        
         curl_close($ch);
         $flightType=$obj["type"];
-    
-         echo "type:".$flightType;
+        $_SESSION["flightType"] =$flightType;
+         //echo "type:".$flightType;
          
 }
 
 else if(isset($_GET["goID"] ))
 {
+
         session_start();
-        $_SESSION['flightType'] =$flightType;
+        
         $_SESSION["goID"]=$_GET["goID"];
         $_SESSION["goFrom"]=$_GET["goFrom"];
         $_SESSION["goTo"]=$_GET["goTo"];
         $_SESSION["goTime"]=$_GET["goTime"];
         $_SESSION["goPrice"]=$_GET["goPrice"];
         $_SESSION["goDate"]=$_GET["goDate"];
-    if($flightType=="round trip")
+       
+
+        $totalPriceGoing= $_SESSION["totalPassenger"] * $_GET["goPrice"];
+        $totalPriceReturn=0;
+        //echo $_GET["goPrice"];
+        $flightType=$_SESSION["flightType"];
+    if($flightType=="roundtrip")
 
     {
+        //echo "elma:".$_GET["returnPrice"];
+        $totalPriceReturn=$_SESSION["totalPassenger"]*$_GET["returnPrice"];
          $_SESSION["returnID"]=$_GET["returnID"];
          $_SESSION["returnFrom"]=$_GET["returnFrom"];
          $_SESSION["returnTo"]=$_GET["returnTo"];
          $_SESSION["returnTime"]=$_GET["returnTime"];
          $_SESSION["returnPrice"]=$_GET["returnPrice"];
          $_SESSION["returnDate"]=$_GET["returnDate"];
+        
     }
-   header("Location:passengerInfo.php/");
+    //echo $flightType;
+   // echo "going:".$totalPriceGoing;
+    $_SESSION["totalPrice"]=$totalPriceGoing+$totalPriceReturn;
+    header("Location:http://localhost:8080/AirlineCompany/PresentationLayer/passengerInfo.php");
     
 }
 
@@ -108,11 +128,18 @@ else if(isset($_GET["goID"] ))
     transition: 0.5s;
     }
 </style>
+<head>
+
+  <title>PAIRLINES</title>
+  <link rel="shortcut icon" href="air2.png" />
+</head>
 <body>
 <div class="container">
     <div class="row col-md-6 col-md-offset-1 custyle">
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform">
+    <h2 style="text-align: center">Ticket List(<?php echo $flightType ?>)</h2>
     <table class="table table-striped custab" id="tblGoing">
+    <h2 style="text-align: center">Going Tickets</h2>
     <thead>
     
         <tr>
@@ -152,6 +179,7 @@ else if(isset($_GET["goID"] ))
     <input id="flagGoing" type="text" name="flagGoing" style="display: none">
     </form>
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform2" style="display: none">
+    <h2 style="text-align: center">Return Tickets</h2>
     <table class="table table-striped custab" id="tblReturn">
     <thead>
     
@@ -231,14 +259,14 @@ else if(isset($_GET["goID"] ))
          goingTime=x.rows[i].cells[4].innerHTML;
          goingPrice=x.rows[i].cells[5].innerHTML;
         
-         if(type=="round trip")
+         if(type=="roundtrip")
          {
 
             document.getElementById('myform2').style.display="block";
       
          }
-         document.getElementById('flagGoing').value=goingId;
-         document.getElementById('flagGoing').style.display="block";
+         //document.getElementById('flagGoing').value=goingId;
+         //document.getElementById('flagGoing').style.display="block";
         
     }
      function selectReturnFunction(row)
@@ -256,18 +284,15 @@ else if(isset($_GET["goID"] ))
        
 
         
-       /*window.location.href="passergerInfo.php.php?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice+"returnID= + "+returnId+"returnFrom=+"+returnFrom+"returnTo=+"+returnTo+"returnTime=+"+returnTime+"returnPrice=+"+returnPrice;*/
-         
-
-        
     }
     function bttnSelectFunction()
     {
-               if(type=="one way")
+               if(type=="oneway")
                 {
                     if(i!=0)
                     {
-                         window.location.href="http://localhost:8080/AirlineCompany/PresentationLayer/passergerInfo.php/?goID= + "+goingId+"goFrom=+"+goingFrom+"goTo=+"+goingTo+"goTime=+"+goingTime+"goPrice=+"+goPrice+"goDate=+"+goDate;                        
+
+                         window.location.href="http://localhost:8080/AirlineCompany/PresentationLayer/ticketList.php/?goID=  "+goingId+"&goFrom="+goingFrom+"&goTo="+goingTo+"&goTime="+goingTime+"&goPrice="+goingPrice+"&goDate="+goingDate;                        
                     }
                     else
                     {
@@ -275,13 +300,14 @@ else if(isset($_GET["goID"] ))
                     }
 
                 }
-                else if(type=="round trip")
+                else if(type=="roundtrip")
                 {
 
                     if(i!=0 && iReturn!=0)
                     {
-                        //window.location.href="adminMemberUpdate.php?ID= + "+goingId+"&Elma= +"+goingId;
-                        window.location.href="passengerInfo.php?goID= + "+goingId+"&goFrom=+ "+goingFrom+"&goTo=+ "+goingTo+"&goTime=+ "+goingTime+"&goPrice=+ "+goPrice+"&returnID= + "+returnId+"&returnFrom=+ "+returnFrom+"&returnTo=+ "+returnTo+"&returnTime=+"+returnTime+"&returnPrice=+ "+returnPrice+"&returnDate=+ "+returnDate;
+                        
+                        
+                       window.location.href="http://localhost:8080/AirlineCompany/PresentationLayer/ticketList.php/?goID="+goingId+"&goFrom="+goingFrom+"&goTo="+goingTo+"&goTime="+goingTime+"&goPrice="+goingPrice+"&returnID="+returnId+"&returnFrom="+returnFrom+"&returnTo="+returnTo+"&returnTime="+returnTime+"&returnPrice= "+returnPrice+"&returnDate="+returnDate+"&goDate="+goingDate;
                     }
                     else
                     {

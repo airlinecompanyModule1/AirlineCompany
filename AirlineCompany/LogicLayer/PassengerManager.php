@@ -36,6 +36,19 @@
 				
 				return $success;
 		}
+		public static function insertNewPassenger($newPassenger)
+		{
+			$db = new DB();
+
+    			$id=$newPassenger->getID();
+    			$name=$newPassenger->getName();
+  	   			$surname=$newPassenger->getSurname();
+   	   			$gender=$newPassenger->getGender();
+   	   			$brithdate=$newPassenger->getBrithdate();
+   	   			$tc=$newPassenger->getTC();
+   	   			$success = $db->executeQuery("INSERT into passengers(ID,Namee,Surname,Gender,Brithdate,TC) values(NULL,'$name','$surname','$gender','$brithdate','$tc')");
+   	   			retun $success;
+		}
 
    	}
 ?>

@@ -99,13 +99,13 @@ if(isset($_POST["passName"]) && isset($_POST["passSurname"]) && isset($_POST["pa
         <div class="modal-body">
          <div class="form-group">
 		<label for="passName">Name</label>
-		<input type="text" name="passName" id="passName" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
+		<input type="text" name="passName" id="passName" minlength="2" maxlength="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
 		
 		<label for="passSurname">Surname</label>
-		<input type="text" name="passSurname" id="passSurname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
+		<input type="text" name="passSurname" id="passSurname" minlength="2" maxlength="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
 	
 		<label for="passTC">Tc</label>
-		<input type="text" name="passTC" id="passTC"  onkeypress="return isNumber(event)" class="form-control input-sm" >
+		<input type="text" name="passTC" id="passTC" minlength="11" maxlength="11" onkeypress="return isNumber(event)" class="form-control input-sm" >
         <label><span class="glyphicon glyphicon-calendar"></span> Brithdate
          <input type="date" name="brithdate" id="brithdate"  class="form-control input-sm" placeholder="Brithdate">
                        
@@ -184,11 +184,8 @@ function saveFunction()
 	var len=tc.length;
   
 
-	if(len!=11)
-	{
-		alert("Length of TC 11");
-	}
-	else if(lenbdate==0 || lenName==0 || lenSurname==0)
+	
+	if(lenbdate==0 || lenName==0 || lenSurname==0)
 	{
 		alert("Fields must not be empty !!!");
 	}

@@ -33,5 +33,18 @@ class ConnectionManager
 		
 		return $success;
 	}
+
+	public static function insertNewConnection($newConnection)
+		{
+			$db = new DB();
+
+    			$id=$newConnection->getID();
+    			$name=$newConnection->getName();
+  	   			$surname=$newConnection->getSurname();
+   	   			$phone=$newConnection->getPhone();
+   	   			$email=$newConnection->getEmail();
+   	   			$success = $db->executeQuery("INSERT into connections(ID,Namee,Surname,Phone,Email) values(NULL,'$name','$surname','$phone','$email')");
+   	   			retun $success;
+		}
 }
 ?>
