@@ -23,7 +23,28 @@
 			
 				return $alltickets;
 		 }
+		 public static function insertTicket($passId,$conId,$fId,$cardId,$pnr,$price)
+		 {
+    		 	$db = new DB();
+   	   			$success = $db->executeQuery("INSERT into tickets(ID,PassengerId,ConnectionId,FlightId,CCardId,PNR,Price) values(NULL,'$passId','$conId','$fId','$cardId','$pnr','$price')");
+   	   			return $success;
+		 }
 
+		    public static function getTicketByPnr($pnr) 
+          {
+          	
+				$db = new DB();
+				$result = $db->getDataTable("SELECT  FlightId,CCardId,Price,PassengerId,ConnectionId FROM tickets WHERE PNR='".$pnr."'");
+				
+				return $result;
+		 }
 
+			public static function deleteByPnr($Id)
+   		{
+		      $db=new DB();
+		      $result = $db->executeQuery("delete from tickets where PNR='$Id' ");
+		     
+		      return $result;
+   		}
  }
 ?>

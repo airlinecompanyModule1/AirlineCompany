@@ -48,7 +48,7 @@ require_once("../PresentationLayer/header.php");
 						
 						<tr>
 							<td>
-								<input type="button" value="Check in" id="bttnpnr"/>
+								<input type="button" value="OK" id="bttnpnr"/>
 							</td>
 							
 						</tr>
@@ -76,7 +76,7 @@ require_once("../PresentationLayer/header.php");
 				
 				var cntrPNR = $("#PNRTXT").val(); // get country code
 				if(cntrPNR == "") {
-					alert("Enter country code!");
+					alert("Enter PNR!");
 					$("#PNRTXT").focus();
 					return;
 				}
@@ -84,7 +84,7 @@ require_once("../PresentationLayer/header.php");
 				
 				$.ajax({ // start an ajax POST 
 					type	: "get",
-					url		: "../LogicLayer/WSPnrValidation.php",
+					url		: "../LogicLayer/WSTicketCancellation.php",
 					data	:  { 
 						"PNR"	: cntrPNR, 
 						

@@ -65,7 +65,7 @@ if(isset($_POST["conName"]) && isset($_POST["conSurname"]) && isset($_POST["conP
 					<td><?php echo $conList[$i]->getSurname(); ?></td>
 				    <td><?php echo $conList[$i]->getPhone(); ?></td>
 				    <td><?php echo $conList[$i]->getEmail(); ?></td>
-					<td><input type="button" class="btn btn-info btn-xs"   value="Update" data-toggle="modal" onclick="updateFunction(this)" id="updatebttn"></td>
+					<td><input type="button" class="btn btn-info btn-xs"   value="Update" data-toggle="modal" onclick="updateFunction(this)" id=<?php echo "updatebttn".$conList[$i]->getID()?>></td>
 				</tr>
 				<?php
 				}
@@ -95,13 +95,13 @@ if(isset($_POST["conName"]) && isset($_POST["conSurname"]) && isset($_POST["conP
         <div class="modal-body">
          <div class="form-group">
 		<label for="conName">Name</label>
-		<input type="text" name="conName" id="conName" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
+		<input type="text" name="conName" id="conName" minlength="2" maxlength="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
 		
 		<label for="conSurname">Surname</label>
-		<input type="text" name="conSurname" id="conSurname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
+		<input type="text" name="conSurname" id="conSurname" minlength="2" maxlength="30" onkeypress="return lettersOnly(event)" class="form-control input-sm" >
 	
 		<label for="conPhone">Phone</label>
-		<input type="text" name="conPhone" id="conPhone"  onkeypress="return isNumber(event)" class="form-control input-sm" >
+		<input type="text" name="conPhone" id="conPhone"  onkeypress="return isNumber(event)" minlength="11" maxlength="11" class="form-control input-sm" >
        
          <label for="conEmail">Email</label>
 		<input type="email" name="conEmail" id="conEmail"  class="form-control input-sm" >
@@ -148,7 +148,8 @@ function updateFunction(row)
     document.getElementById('updatedId').value=id;
    
     //alert(brithdate);
- 	$('#updatebttn').attr('data-target','#myModal');
+  var bttn="#updatebttn"+id;
+  $(bttn).attr('data-target','#myModal');
     
 
 }

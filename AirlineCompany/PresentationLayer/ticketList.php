@@ -1,8 +1,17 @@
 <?php
-
+session_start();
 require_once("contains.php");
-require_once("header.php");
-require_once("../LogicLayer/TicketInformation.php");
+if(isset($_SESSION['loginMember']))
+{
+  require_once("memberHeader.php");
+}
+else
+{
+  require_once("header.php");
+}
+
+
+//require_once("../LogicLayer/TicketInformation.php");
 /*$json_string = 'tickets.json';
 $errormessage="";
 
@@ -22,9 +31,13 @@ $obj = json_decode($jsondata,true);*/
 $obj="";
 $flightType="";
 $totalPassenger=0;
+
+
 if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GET["ddate"])&&isset($_GET["selAdult"])&& isset($_GET["selChild"])&& isset($_GET["selInfant"])&& isset($_GET["rdate"]))
 {
 
+    
+    
      // prepare GET query
        $headers = array(
         "Content-Type: application/json"
@@ -36,16 +49,17 @@ if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GE
         "to" => $_GET["to"],
         "ddate" => $_GET["ddate"],
         "rdate" => $_GET["rdate"],
+
         "selAdult" => $_GET["selAdult"],
         "selChild" => $_GET["selChild"],
         "selInfant" => $_GET["selInfant"]
 
         );
-       session_start();
+    
        $_SESSION['selAdult'] =$_GET["selAdult"];
        $_SESSION['selChild'] =$_GET["selChild"];
        $_SESSION['selInfant'] =$_GET["selInfant"];
-       $totalPassenger=$_GET["selAdult"]+$_GET["selChild"]+$_GET["selInfant"];
+       $totalPassenger=$_GET["selAdult"]+$_GET["selChild"];
        //echo $totalPassenger;
        $_SESSION["totalPassenger"]= $totalPassenger;
         $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSTicket.php/?" . http_build_query($fields);
@@ -78,7 +92,7 @@ if(isset($_GET["type"])&& isset($_GET["from"]) && isset($_GET["to"])&&isset($_GE
 else if(isset($_GET["goID"] ))
 {
 
-        session_start();
+       
         
         $_SESSION["goID"]=$_GET["goID"];
         $_SESSION["goFrom"]=$_GET["goFrom"];
@@ -87,8 +101,8 @@ else if(isset($_GET["goID"] ))
         $_SESSION["goPrice"]=$_GET["goPrice"];
         $_SESSION["goDate"]=$_GET["goDate"];
        
-
-        $totalPriceGoing= $_SESSION["totalPassenger"] * $_GET["goPrice"];
+        $multiple=$_GET["goPrice"]/3;
+        $totalPriceGoing= $_SESSION["totalPassenger"] * $_GET["goPrice"]+ $_SESSION['selInfant']*$multiple;
         $totalPriceReturn=0;
         //echo $_GET["goPrice"];
         $flightType=$_SESSION["flightType"];
@@ -96,7 +110,8 @@ else if(isset($_GET["goID"] ))
 
     {
         //echo "elma:".$_GET["returnPrice"];
-        $totalPriceReturn=$_SESSION["totalPassenger"]*$_GET["returnPrice"];
+        $multiple=$_GET["returnPrice"]/3;
+        $totalPriceReturn=$_SESSION["totalPassenger"]*$_GET["returnPrice"]+$_SESSION['selInfant']*$multiple;
          $_SESSION["returnID"]=$_GET["returnID"];
          $_SESSION["returnFrom"]=$_GET["returnFrom"];
          $_SESSION["returnTo"]=$_GET["returnTo"];
@@ -107,7 +122,9 @@ else if(isset($_GET["goID"] ))
     }
     //echo $flightType;
    // echo "going:".$totalPriceGoing;
-    $_SESSION["totalPrice"]=$totalPriceGoing+$totalPriceReturn;
+    $price=$totalPriceGoing+$totalPriceReturn;
+    $price=number_format((float)$price, 2, '.', '');
+    $_SESSION["totalPrice"]=$price;
     header("Location:http://localhost:8080/AirlineCompany/PresentationLayer/passengerInfo.php");
     
 }
@@ -130,11 +147,12 @@ else if(isset($_GET["goID"] ))
 </style>
 <head>
 
-  <title>PAIRLINES</title>
-  <link rel="shortcut icon" href="air2.png" />
+
 </head>
-<body>
-<div class="container">
+<body >
+
+<div class="container" >
+
     <div class="row col-md-6 col-md-offset-1 custyle">
     <form method="POST" action="<?php $_PHP_SELF ?>" id="myform">
     <h2 style="text-align: center">Ticket List(<?php echo $flightType ?>)</h2>
@@ -225,7 +243,7 @@ else if(isset($_GET["goID"] ))
         
         
 </div>
-
+</body>
 <script type="text/javascript">
     
 
@@ -319,5 +337,5 @@ else if(isset($_GET["goID"] ))
     }
 
 </script>
-</body>
+
 </html>

@@ -18,10 +18,10 @@ include_once("contains.php");
       <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminTickets.php"><font color="rgb(204,102,0)" > <b>Tickets</b></font></a></li>
       <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminPassengers.php""><font color="rgb(204,102,0)" > <b>Passengers</b></font></a></li>
       <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/adminConnections.php"><font color="rgb(204,102,0)" > <b>Connections</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Help</b></font></a></li>
+     
 
       <ul class="nav navbar-nav navbar-right">
-      <li><a href="../index.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/index.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
 
     </ul>

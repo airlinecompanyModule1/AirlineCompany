@@ -34,17 +34,45 @@ class ConnectionManager
 		return $success;
 	}
 
+	public static function deleteConnection($id)
+	{
+      	  $db=new DB();
+          $success=1;
+          $result = $db->getDataTable("select count(ID) as total from connections where ID='$id'");
+          $total=0;
+          if($row = $result->fetch_assoc())
+          {
+            $total=$row["total"];
+          }
+          if($total=1)
+          {
+            $success=$db->executeQuery("delete from connections where ID='$id'");
+          }
+      		
+      		return $success;
+	}
 	public static function insertNewConnection($newConnection)
-		{
+	{
 			$db = new DB();
 
-    			$id=$newConnection->getID();
+    			
     			$name=$newConnection->getName();
   	   			$surname=$newConnection->getSurname();
    	   			$phone=$newConnection->getPhone();
    	   			$email=$newConnection->getEmail();
-   	   			$success = $db->executeQuery("INSERT into connections(ID,Namee,Surname,Phone,Email) values(NULL,'$name','$surname','$phone','$email')");
-   	   			retun $success;
-		}
+   	   			$success = $db->executeQuery("INSERT into connections (ID,Namee,Surname,Phone,Email) values(NULL,'$name','$surname','$phone','$email')");
+   	   			return $success;
+	}
+	public static function getMaxId()
+   {
+      $db=new DB();
+      $result = $db->getDataTable("select Max(ID) as max from connections");
+      $id=-1;
+      if($row = $result->fetch_assoc())
+      {
+        $id=$row["max"];
+      }
+      return $id;
+   }
 }
 ?>

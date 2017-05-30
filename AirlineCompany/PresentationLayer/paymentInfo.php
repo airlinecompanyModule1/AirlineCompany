@@ -1,21 +1,51 @@
 <?php
-
+session_start();
 require_once("contains.php");
-require_once("header.php");
+
+
+
+
 require_once("../LogicLayer/PassengerManager.php");
 require_once("../LogicLayer/ConnectionManager.php");
+require_once("../LogicLayer/TicketManager.php");
+require_once("../LogicLayer/CreditCardManager.php");
+require_once("../LogicLayer/MemberManager.php");
 
-session_start();
+
 $totalPrice=0;
+$maxConId=0;
+$maxCardId=0;
+$money="";
+$flag="false";
+$logId;
 if(isset( $_SESSION["totalPrice"]))
 {
     $totalPrice=$_SESSION["totalPrice"];
 }
+if(isset($_SESSION["loginMember"]) )
+{
+  $money = MemberManager::getMemberbyId($_SESSION["loginMember"])->getFlightMoney();
+}
+                                    
 if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) && isset($_POST["exYear"]) && isset($_POST["exMonth"]) && isset($_POST["sno"]) )
 {
-    $headers = array(
-        "Content-Type: application/json"
-        );
+  
+  if(isset($_POST["usemoney"]))
+  {
+      $totalPrice=$_SESSION["totalPrice"];
+      if($totalPrice>=$money)
+      {
+        $totalPrice=$totalPrice-$money;
+        $money=0;
+      }
+      else
+      {
+        $money=$money-$totalPrice;
+        $totalPrice=0;
+
+      }
+  }
+    $headers = array("Content-Type: application/json");
         // can be tested by web browser, http://md5.jsontest.com/?text=hello%20world
        $fields = array(
         "type" => "buying",
@@ -24,7 +54,7 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
         "cardno" => $_POST["cno"],
         "security" => $_POST["sno"],
         "exdate" => $_POST["exMonth"]."-".$_POST["exYear"],
-        "totalprice" => $_SESSION["totalPrice"]
+        "totalprice" => $totalPrice
 
         );
      $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSPayment.php/?" . http_build_query($fields);
@@ -43,19 +73,55 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
         // FALSE to stop cURL from verifying the peer's certificate.
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
+
         // execute request
         $result = curl_exec($ch);
         $obj = json_decode($result, true);
        
         curl_close($ch);
-        $control=$obj["result"];
+        $control=$obj['result'];
+        //echo "value:".$control;
+      
         if($control=="true")
         {
+  
+
             if(isset($_SESSION["totalPass"]))
             {
                 $total=$_SESSION["totalPass"];
-                for($i=0;$i<$toal;$i++)
+                if(isset($_SESSION["conName"]) && isset($_SESSION["conSurname"]) && isset($_SESSION["conPhone"]) && isset($_SESSION["conEmail"]))
                 {
+
+                    $conName = $_SESSION["conName"];
+                    $conSurname = $_SESSION["conSurname"];
+                    $conPhone = $_SESSION["conPhone"];
+                    $conEmail= $_SESSION["conEmail"];
+
+                    $newConn= new Connection(NULL,$conName,$conSurname,$conPhone ,$conEmail );
+                    $result = ConnectionManager::insertNewConnection($newConn);
+                    if(!$result)
+                    {
+                      //echo "yeter";
+                    }
+                    $maxConId=ConnectionManager::getMaxId();
+                   // echo "max:".$maxConId."**";
+                }
+                    $name = $_POST["cname"];
+                    $surname = $_POST["csurname"];
+                    $cardno =  $_POST["cno"];
+                    $security = $_POST["sno"];
+                    $exdate = $_POST["exMonth"]."-".$_POST["exYear"];
+                    
+                    $newCard=new CreditCard(NULL,$cardno,$name,$surname,$exdate, $security);
+                    $result=CreditCardManager::insertCreditCard($newCard);
+                    if($result)
+                    {
+                        $maxCardId=CreditCardManager::getCardByNo($cardno);
+                    }
+echo "max";
+                for($i=0;$i<$total;$i++)
+                {
+
                     if(isset($_SESSION[$i."Name"]) && isset($_SESSION[$i."Surname"]) && isset($_SESSION[$i."Gender"]) && isset($_SESSION[$i."Birthdate"]))
                     {
                         //$flag="TRUE";
@@ -67,36 +133,118 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                         $tc=NULL;
                         if(isset($_SESSION[$i."tc"]))
                         {
-                            $tc=$_POST[$i."tc"];
+                            $tc=$_SESSION[$i."tc"];
                         }
-                     
+                     echo "elma2";
                         $newPass=new Passenger(NULL,$name,$surname,$gender,$birthdate,$tc);
                         $result=PassengerManager::insertNewPassenger($newPass);
+                        $maxPass=PassengerManager::getMaxId();
                         if($result)
                         {
+                          echo "elma1";
+                            if(isset($_SESSION["goID"]) && isset($_SESSION["goPrice"]))
+                            {
+                              echo "elma15";
+                              $fId=$_SESSION["goID"];
+                              $price=$_SESSION["goPrice"];
+                              $pnr="";
+                                  $letters=array();
+                                   for($i="A";$i<"Z";$i++)
+                                   {
+                                        array_push($letters,$i);
+                                   }
+                                   
+                                   $index=array();
+                                   for($i=0;$i<6;$i++)
+                                   {
+                                        array_push($index,rand(0,24));
+                                   }
+                                    print_r($index);
+                                    
+                                  
+                                    for($i=0;$i<6;$i++)
+                                    {
+                                      $value=$index[$i];
+                                      $pnr=$pnr."$letters[$value]";
+                                      if($i==3)
+                                      {
+                                        $pnr=$pnr.$maxPass;
+                                      }
+                                    }
+                                    
+                              $result=TicketManager::insertTicket($maxPass,$maxConId,$fId,$maxCardId,$pnr,$price);
 
+                              if($result)
+                              {
+                                   $flag="true";
+                              }
+
+                              if(isset($_SESSION["returnID"])&&isset($_SESSION["returnPrice"])&&isset($_SESSION["flightType"]))
+                              {
+                                 $type=$_SESSION["flightType"];
+                                 $fId=$_SESSION["returnID"];
+                                 $price=$_SESSION["returnPrice"];
+                                 if($type=="roundtrip")
+                                 {
+                                    $index2=array();
+                                   for($i=0;$i<6;$i++)
+                                   {
+                                        array_push($index2,rand(0,24));
+                                   }
+                                    print_r($index2);
+                                    
+                                    $pnr="";
+                                    for($i=0;$i<6;$i++)
+                                    {
+                                      $value=$index2[$i];
+                                      $pnr=$pnr."$letters[$value]";
+                                      if($i==3)
+                                      {
+                                        $pnr=$pnr.$maxPass;
+                                      }
+                                    }
+                                    $pnr=$pnr.$fId;
+                                   $result=TicketManager::insertTicket($maxPass,$maxConId,$fId,$maxCardId,$pnr,$price);
+                                   if(!$result)
+                                   {
+                                      $flag="false";
+                                   }
+                                 }
+
+                              }
+                              if(isset($_SESSION['loginMember']))
+                              {
+
+                                 $logId=$_SESSION['loginMember'];
+                                // $_SESSION["elma"]=$logId;
+                                 $money=$money+3;
+                                 $result=MemberManager::updateFlightMoney($logId,$money);
+                                 if(!$result)
+                                   {
+                                      $flag="false";
+                                   }
+                              }
+                            }
+                           
                             
                         }
                     }
                 }
 
-                if(isset($_SESSION["conName"]) && isset($_SESSION["conSurname"]) && isset($_SESSION["conPhone"]) && isset($_SESSION["conEmail"]))
-                {
 
-                    $conName = $_SESSION["conName"];
-                    $conSurname = $_SESSION["conSurname"];
-                    $conPhone = $_SESSION["conPhone"];
-                    $conEmail= $_SESSION["conEmail"];
-
-                    $newConn= new Connection(NULL,$conName,$conSurname,$conPhone ,$conEmail );
-                    $result = ConnectionManager::insertNewConnection($newConn);
-
-                }
         }
-        else
+      
+
+ }
+  else
         {
             echo "<script> alert('Please control card information !!!');</script>";
         }
+
+}
+if($flag=="true")
+{
+    //header("Location:http://localhost:8080/AirlineCompany/PresentationLayer/home.php?");
 }
 ?>
 <!DOCTYPE html>
@@ -120,13 +268,17 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
   <title>PAIRLINES</title>
   <link rel="shortcut icon" href="air2.png" />
 </head>
-<body>
+<body style="background-image: url('background.jpg');">
+<div style="float: right; margin-right: 250px">
+  <img src="pay.jpg" > 
+  <a href="http://localhost:8080/AirlineCompany/PresentationLayer/home.php"><span class="glyphicon glyphicon-remove" style="color: red"></span> <font color="red" ><b>Exit</b> </font></a>      
+</div>
 <div class="container">
     <div class="row col-md-6 col-md-offset-1 custyle">
-    <form method="POST" action="<?php $_PHP_SELF ?>" id="myform">
-           		<div style="background-color: #4BBED5 ;">
-			    		<label >  &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-plane"><font size="4"><b> Going Ticket Detail</b></font></span></label>
-			 			
+    <form method="POST" action="<?php $_PHP_SELF ?>" id="myform" style="background-color: white">
+                <div style="background-color: #4BBED5 ;">
+                        <label >  &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-plane"><font size="4"><b> Going Ticket Detail</b></font></span></label>
+                        
     <table class="table table-striped  table-bordered" id="tblGoing">
 
     <thead>
@@ -142,15 +294,15 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                 <tr>
                     <td><?php if(isset( $_SESSION["goFrom"])) echo  $_SESSION["goFrom"]?></td>
                     <td><?php  if(isset( $_SESSION["goTo"])) echo  $_SESSION["goTo"]?></td>
-                    <td><?php  if(isset( $_SESSION["goFrom"])) echo  $_SESSION["goFrom"]?></td>
+                    <td><?php  if(isset( $_SESSION["goDate"])) echo  $_SESSION["goDate"]?></td>
                     <td><?php  if(isset( $_SESSION["goTime"])) echo  $_SESSION["goTime"]?></td>
                    
                     
                 </tr>
     </table></div>
     <div style="background-color: #4BBED5 ; <?php if(isset( $_SESSION["flightType"]) && $_SESSION["flightType"]=="oneway") echo "display:none;"?>;" id="returnDiv">
-			    		<label >  &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-plane"><font size="4"><b> Return Ticket Detail</b></font></span></label>
-			 			
+                        <label >  &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-plane"><font size="4"><b> Return Ticket Detail</b></font></span></label>
+                        
     <table class="table table-striped  table-bordered" id="returntbl">
 
     <thead>
@@ -164,7 +316,7 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                 <tr>
                     <td><?php if(isset( $_SESSION["returnFrom"])) echo  $_SESSION["returnFrom"]?></td>
                     <td><?php  if(isset( $_SESSION["returnTo"])) echo  $_SESSION["returnTo"]?></td>
-                    <td><?php  if(isset( $_SESSION["returnFrom"])) echo  $_SESSION["returnFrom"]?></td>
+                    <td><?php  if(isset( $_SESSION["returnDate"])) echo  $_SESSION["returnDate"]?></td>
                     <td><?php  if(isset( $_SESSION["returnTime"])) echo  $_SESSION["returnTime"]?></td>
                    
                     
@@ -173,22 +325,22 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
     </div>
    
     <div style="background-color: #4BBED5 ;height:30px ">
-			    		<label >  &nbsp;&nbsp;&nbsp;<span class="	glyphicon glyphicon-credit-card"><font size="4"><b> Credit Card Information</b></font></span></label>	</div>
+                        <label >  &nbsp;&nbsp;&nbsp;<span class="   glyphicon glyphicon-credit-card"><font size="4"><b> Credit Card Information</b></font></span></label>   </div>
                         <div class="row">
                             
                        
-			    		<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    					<label for="cname">Name</label>
-			                         <input type="text" name="cname" id="cname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm"></div>
-			                         </div>
-			                         <div class="col-xs-6 col-sm-6 col-md-6">
-			                         <div class="form-group">
-			    				<label for="csurname">Surname</label>
-			                         <input type="text" name="csurname" id="csurname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm">
-			    					</div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                    <label for="cname">Name</label>
+                                     <input type="text" name="cname" id="cname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm"></div>
                                      </div>
-			    					</div>
+                                     <div class="col-xs-6 col-sm-6 col-md-6">
+                                     <div class="form-group">
+                                <label for="csurname">Surname</label>
+                                     <input type="text" name="csurname" id="csurname" minlength="2" maxlegth="30" onkeypress="return lettersOnly(event)" class="form-control input-sm">
+                                    </div>
+                                     </div>
+                                    </div>
                                     <div class="row"> 
                                     
                                     <div class="col-xs-6 col-sm-6 col-md-6">
@@ -197,7 +349,7 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                                      <input type="text" name="sno" id="sno" minlength="3" maxlength="3" pattern="\d{3}" onkeypress="return isNumber(event)" class="form-control input-sm" >
                                     </div>
                                     </div>
-			    				    
+                                    
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label>Expiration Date</label><br>
@@ -231,7 +383,7 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                                     </div>
                                 
                                     </div>
-			    					
+                                    
                                     <div class="row"> 
                                      <div class="col-xs-6 col-sm-6 col-md-6">
                                      <div class="form-group">
@@ -243,17 +395,27 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                                     <div class="form-group" >
                                     <br>
                                     <label for="cname"><font size="4" color="green"><?php echo "Total Price: $totalPrice $" ?></font></label>
-                                    </div></div>
 
-			    					<div class="col-xs-6 col-sm-6 col-md-2" style="margin-left: 180px">
-			                     <br>
-			    				
-			                         <input type="button" class="btn btn-danger btn-block" value="Next" onclick="selectFunction()">
-			    				
-			    					</div>
+                                    </div>
+                                    <div style="display:<?php if(isset($_SESSION["loginMember"]) ){ echo "block"; }  else{ echo "none"; }  ?>" >
+                                    <?php if(isset($_SESSION["loginMember"]) )
+                                    $money = MemberManager::getMemberbyId($_SESSION["loginMember"])->getFlightMoney();
+                                     echo "<b>"."your money->".$money."</b>";
+                                    ?><br>
+                                      <input type="checkbox" name="usemoney" value="usemoney"><b>Use Flight Money</b>
+                                    </div>
+                                    
                                     </div>
 
-			    		
+                                    <div class="col-xs-6 col-sm-6 col-md-2" style="margin-left: 450px">
+                                 <br>
+                                
+                                     <input type="button" class="btn btn-danger btn-block" value="Next" onclick="selectFunction()">
+                                
+                                    </div>
+                                    </div>
+
+                        
     <?php 
         if(isset($errormessage)) 
         {
@@ -292,6 +454,6 @@ function isNumber(evt) {
           document.getElementById('myform').submit();
      }
 
+    
 </script>
-    </html>
-
+</html>

@@ -16,7 +16,7 @@ include_once("contains.php");
     <ul class="nav nav-pills " >
       <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/home.php"><font color="rgb(0,206,209)" > <b>Flight Planning</b></font></a></li>
       <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/checkin.php"><font color="rgb(204,102,0)" > <b>Check-in</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Cancellation</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/cancellation.php"><font color="rgb(204,102,0)" > <b>Cancellation</b></font></a></li>
       
       <ul class="nav navbar-nav navbar-right">
      

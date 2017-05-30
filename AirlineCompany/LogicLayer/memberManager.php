@@ -102,6 +102,18 @@
 				return $memObj1;
         }
 
+        public static function updateFlightMoney($memberId,$money)
+        {
+        	$db=new DB();
+        	$success = $db->executeQuery("UPDATE members SET FlightMoney='$money' where ID='$memberId'");
+
+			return $success;
+        }
+
+
+
+
+
    }
 
 ?>

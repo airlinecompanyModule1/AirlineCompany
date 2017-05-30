@@ -1,18 +1,40 @@
 <?php
-   session_start();
+  
     require_once("contains.php");
-	require_once("header.php");
-	require_once("searchFlight.php");
-	 if(isset($_GET["From"]))
-    {
-    	
-      session_unset(); 
+    session_start();
+
+ if(isset($_GET["From"]))
+{
+     // session_start();
+      //session_unset(); 
       session_destroy(); 
-     
-     if(isset($_SESSION['loginMember']))
-     {
-        echo "id ".$_SESSION['loginMember'];
-     }
-     
-    }
+  require_once("header.php");
+}
+
+else if(isset($_SESSION['loginMember']))
+{
+  //session_start(); 
+  $id=$_SESSION['loginMember'];
+  //session_unset($_SESSION['loginMember']); 
+      session_destroy();
+      session_start(); 
+   $_SESSION['loginMember']=$id;
+  require_once("memberHeader.php");
+}
+
+else
+{
+  //echo  "else girdim";
+	//session_unset(); 
+  //session_start(); 
+      session_destroy(); 
+  require_once("header.php");
+}
+	
+require_once("searchFlight.php");
+  
+
+	
+
+
 ?>

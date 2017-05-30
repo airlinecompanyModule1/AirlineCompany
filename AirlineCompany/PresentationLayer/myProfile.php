@@ -5,9 +5,10 @@
 	$errorMeesage=null;
 	 require_once("../LogicLayer/MemberManager.php");
 	 require_once("memberHeader.php");
+//echo "elma:".$_SESSION['loginMember'];
 	if(isset($_SESSION['loginMember']))
 	{
-       
+      
         $memberId=$_SESSION['loginMember'];
         #echo "id: ".$memberId;
         $member=MemberManager::getMemberById($memberId);

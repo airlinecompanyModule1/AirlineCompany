@@ -17,10 +17,9 @@ $errorMeesage = "";
 				{
 					session_start();
 			        $_SESSION['loginMember'] =$member->getID();
-                  
+                  echo "elma:".$_SESSION['loginMember'];
 					if($member->getIsAdmin()=="N")
 					{
-
 						header("Location:memberHome.php");
 					}
 					else

@@ -47,8 +47,28 @@
    	   			$brithdate=$newPassenger->getBrithdate();
    	   			$tc=$newPassenger->getTC();
    	   			$success = $db->executeQuery("INSERT into passengers(ID,Namee,Surname,Gender,Brithdate,TC) values(NULL,'$name','$surname','$gender','$brithdate','$tc')");
-   	   			retun $success;
+   	   			return $success;
 		}
+		public static function getMaxId()
+   		{
+		      $db=new DB();
+		      $result = $db->getDataTable("select Max(ID) as max from passengers");
+		      $id=-1;
+		      if($row = $result->fetch_assoc())
+		      {
+		        $id=$row["max"];
+		      }
+		      return $id;
+   		}
+
+   		public static function deletePassenger($Id)
+   		{
+		      $db=new DB();
+		      $result = $db->executeQuery("delete from passengers where ID='$Id' ");
+		     
+		      return $result;
+   		}
+
 
    	}
 ?>

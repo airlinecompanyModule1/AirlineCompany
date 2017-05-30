@@ -37,13 +37,13 @@ input[type="button"]:hover{
       <a class="navbar-brand" href="#">P'airlines</a>
     </div>
     <ul class="nav nav-pills " >
-      <li><a href="memberHome.php"><font color="rgb(0,206,209)" > <b>Flight Planning</b></font></a></li>
-      <li><a href="checkin.php"><font color="rgb(204,102,0)" > <b>Check-in</b></font></a></li>
-      <li><a href="#"><font color="rgb(204,102,0)" > <b>Cancellation</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/memberHome.php"><font color="rgb(0,206,209)" > <b>Flight Planning</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/checkin.php"><font color="rgb(204,102,0)" > <b>Check-in</b></font></a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/cancellation.php"><font color="rgb(204,102,0)" > <b>Cancellation</b></font></a></li>
       
       <ul class="nav navbar-nav navbar-right">
      
-      <li><a href="myProfile.php"><span class="glyphicon glyphicon-user"></span> My Profile</a></li>
+      <li><a href="http://localhost:8080/AirlineCompany/PresentationLayer/myProfile.php"><span class="glyphicon glyphicon-user"></span> My Profile</a></li>
       <li>
       <input type="button" value="Log Out" class="new" id="al" style="outline: none;background-color: transparent; margin-top: 14px; margin-right:5px;" onclick="logoutFunction()">
       </ul>
@@ -59,7 +59,11 @@ input[type="button"]:hover{
 <script type="text/javascript">
   function logoutFunction() 
   {
-    window.location.href="home.php?From=log";
+    /*"<?php 
+      //session_start();
+      //session_destroy();
+    ?>"*/
+    window.location.href="http://localhost:8080/AirlineCompany/PresentationLayer/home.php?From=log";
   }
 </script>
 </html>

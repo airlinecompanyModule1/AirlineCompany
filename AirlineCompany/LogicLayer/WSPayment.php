@@ -5,8 +5,8 @@ if(isset($_GET["name"])&& isset($_GET["surname"])&& isset($_GET["cardno"])&&isse
 
 		header('Content-type: application/json');
 
-		$result="false";
-		echo json_encode(array("result"=>$result);
+		$result="true";
+		echo json_encode(array("result"=>$result));
 		
 }
 

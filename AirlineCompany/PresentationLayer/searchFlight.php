@@ -182,6 +182,7 @@ if(isset($_POST["travel_type"]) && isset($_POST["from"])&& isset($_POST["to"])&&
         
         var total=parseInt(countAdult,10)+parseInt(countChild,10);
         var dDate=document.getElementById("ddate").value;
+     
         var rDate=document.getElementById("rdate").value;
         var today = new Date();
         var res = today.toISOString().slice(0,10).replace(/-/g,"-");
@@ -193,6 +194,8 @@ if(isset($_POST["travel_type"]) && isset($_POST["from"])&& isset($_POST["to"])&&
         var from=document.getElementById("from");
         var fromValue = from.options[from.selectedIndex].value;
 
+
+
         if(toValue==fromValue)
         {
              alert("To Airport and From Airport are not same !!!");
@@ -201,7 +204,7 @@ if(isset($_POST["travel_type"]) && isset($_POST["from"])&& isset($_POST["to"])&&
         {
             alert("Count of total passengers must be lower than 5 or equal !!!"+total);
         }
-        else if(Date.parse(res) > Date.parse(dDate) || ( control==true &&Date.parse(res) > Date.parse(rDate)) )
+        else if( dDate.length==0 || (Date.parse(res) > Date.parse(dDate) || ( control==true &&Date.parse(res) > Date.parse(rDate)) ))
         {
               alert("Please choose a day after"+res);
         }
@@ -209,7 +212,7 @@ if(isset($_POST["travel_type"]) && isset($_POST["from"])&& isset($_POST["to"])&&
         {
             alert("Count of Infant passenger must be lower than count of Adult passenger or equal !!!");
         }
-        else if(Date.parse(dDate) > Date.parse(rDate) && control==true)
+        else if( (dDate.length==0  || rDate.length==0) && (Date.parse(dDate) > Date.parse(rDate) && control==true))
         {
             alert("Return date  must be lower than  departure date or equal !!!");
         }
@@ -217,6 +220,7 @@ if(isset($_POST["travel_type"]) && isset($_POST["from"])&& isset($_POST["to"])&&
         {
                 alert("Amount of adult passenger must be more than zero !!!");
         }
+
         else
         {
             document.getElementById('myform').submit();

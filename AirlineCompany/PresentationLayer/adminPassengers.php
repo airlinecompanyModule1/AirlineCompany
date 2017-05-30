@@ -69,7 +69,7 @@ if(isset($_POST["passName"]) && isset($_POST["passSurname"]) && isset($_POST["pa
 					<td><?php echo $passList[$i]->getTC(); ?></td>
 					<td><?php echo $passList[$i]->getBrithdate(); ?></td>
 					<td><?php echo $passList[$i]->getGender(); ?></td>
-					<td><input type="button" class="btn btn-info btn-xs"   value="Update" data-toggle="modal" onclick="updateFunction(this)" id="updatebttn"></td>
+					<td><input type="button" class="btn btn-info btn-xs"   value="Update" data-toggle="modal" onclick="updateFunction(this)" id=<?php echo "updatebttn".$passList[$i]->getID()?>></td>
 				</tr>
 				<?php
 				}
@@ -171,7 +171,8 @@ function updateFunction(row)
     	
     }
     //alert(brithdate);
- 	$('#updatebttn').attr('data-target','#myModal');
+    var bttn="#updatebttn"+id;
+ 	$(bttn).attr('data-target','#myModal');
     
 
 }
