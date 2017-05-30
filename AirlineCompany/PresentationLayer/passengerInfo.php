@@ -50,7 +50,7 @@ if(isset($_SESSION['selAdult']) && isset($_SESSION['selChild']) && isset($_SESSI
 			$_SESSION[$i."tc"] = $tc; 
 			if($_SESSION[$i."tc"]!="")
 			{
-				/*$headers = array("Content-Type: application/json");
+				$headers = array("Content-Type: application/json");
         // can be tested by web browser, http://md5.jsontest.com/?text=hello%20world
        		   $fields = array("TCNumber" => $_SESSION[$i."tc"]);
 		 		// http://civilregistry.webege.com/validatePerson.php/?TCNumber=12345678900
@@ -80,10 +80,10 @@ if(isset($_SESSION['selAdult']) && isset($_SESSION['selChild']) && isset($_SESSI
 		        {
 		        	//echo $obj["persons"];
 		        	 $flag=$obj["persons"];
-		        }*/
+		        }
 		       
 		    
-		        $flag="TRUE";
+		        //$flag="TRUE";
 
 				
 			}

@@ -15,7 +15,6 @@ else if(isset($_SESSION['loginMember']))
 {
   //session_start(); 
   $id=$_SESSION['loginMember'];
-  //session_unset($_SESSION['loginMember']); 
       session_destroy();
       session_start(); 
    $_SESSION['loginMember']=$id;
@@ -24,9 +23,6 @@ else if(isset($_SESSION['loginMember']))
 
 else
 {
-  //echo  "else girdim";
-	//session_unset(); 
-  //session_start(); 
       session_destroy(); 
   require_once("header.php");
 }

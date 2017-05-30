@@ -118,7 +118,7 @@ if(isset($_POST["cname"]) && isset($_POST["csurname"]) && isset($_POST["cno"]) &
                     {
                         $maxCardId=CreditCardManager::getCardByNo($cardno);
                     }
-echo "max";
+
                 for($i=0;$i<$total;$i++)
                 {
 
@@ -135,16 +135,17 @@ echo "max";
                         {
                             $tc=$_SESSION[$i."tc"];
                         }
-                     echo "elma2";
+                    
                         $newPass=new Passenger(NULL,$name,$surname,$gender,$birthdate,$tc);
                         $result=PassengerManager::insertNewPassenger($newPass);
                         $maxPass=PassengerManager::getMaxId();
+                        
                         if($result)
                         {
-                          echo "elma1";
+                          
                             if(isset($_SESSION["goID"]) && isset($_SESSION["goPrice"]))
                             {
-                              echo "elma15";
+                              
                               $fId=$_SESSION["goID"];
                               $price=$_SESSION["goPrice"];
                               $pnr="";
@@ -159,7 +160,7 @@ echo "max";
                                    {
                                         array_push($index,rand(0,24));
                                    }
-                                    print_r($index);
+                                   // print_r($index);
                                     
                                   
                                     for($i=0;$i<6;$i++)
@@ -191,7 +192,7 @@ echo "max";
                                    {
                                         array_push($index2,rand(0,24));
                                    }
-                                    print_r($index2);
+                                    //print_r($index2);
                                     
                                     $pnr="";
                                     for($i=0;$i<6;$i++)
@@ -244,7 +245,54 @@ echo "max";
 }
 if($flag=="true")
 {
-    //header("Location:http://localhost:8080/AirlineCompany/PresentationLayer/home.php?");
+        $fId=$_SESSION["goID"];
+        $count=$_SESSION["totalPass"];
+        $headers = array("Content-Type: application/json");
+        // can be tested by web browser, http://md5.jsontest.com/?text=hello%20world
+        $fields = array(
+        "FlightId" => $fId,
+        "PassCount"=>$count
+        );
+        $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSSeatValidation.php/?" . http_build_query($fields);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+       
+        $result = curl_exec($ch);
+        $obj = json_decode($result, true);
+       
+        curl_close($ch);
+        $control=$obj['result'];
+        echo "control:".$control;
+        $type=$_SESSION["flightType"];
+        if($control=="true" && $type=="roundtrip" )
+        {
+            $fId=$_SESSION["returnID"];
+            $fields = array("FlightId" => $fId,"PassCount"=>$count);
+            $url = "http://localhost:8080/AirlineCompany/LogicLayer/WSSeatValidation.php/?" . http_build_query($fields);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+           
+            $result = curl_exec($ch);
+            $obj = json_decode($result, true);
+           
+            curl_close($ch);
+            $control=$obj['result'];
+            //echo "girmedi";
+           
+        }
+       if($control=="true")
+       {
+              header("Location:http://localhost:8080/AirlineCompany/PresentationLayer/home.php?");
+       }
+    
 }
 ?>
 <!DOCTYPE html>

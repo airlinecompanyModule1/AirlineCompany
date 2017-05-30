@@ -33,7 +33,7 @@ require_once("../PresentationLayer/header.php");
 	<body> 
 		<div id="dvMain">
 			<div class="dvInner">
-				<h2>CHECK IN</h2>
+				<h2>Ticket Cancellation</h2>
 				<form  method="POST" action="<?php $_PHP_SELF ?>"> 
 					<table>
 						<tr>
